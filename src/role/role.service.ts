@@ -9,7 +9,6 @@ import { InjectDataSource, InjectRepository } from '@nestjs/typeorm';
 import { DataSource, In, Not, QueryRunner, Repository } from 'typeorm';
 import { Permission } from '../permission/entities/permission.entity';
 import { createTransaction } from '../utils/create-transaction.util';
-import { PageMetaDto } from '../utils/dto/page-meta.dto';
 import { Role, RolePermission } from './entities';
 import { User, UsersRoles } from '../auth/entities';
 import {
@@ -20,8 +19,9 @@ import {
   GetRoleQueryDto,
   UpdateRoleDto,
 } from './dto';
-import { PermissionEnum } from '../utils/enums/permission.enum';
 import { RedisService } from '../redis';
+import { PermissionEnum } from '../common/enums';
+import { PageMetaDto } from '../common/dto/page-meta.dto';
 
 @Injectable()
 export class RoleService {
@@ -97,10 +97,10 @@ export class RoleService {
           (permission) => permission.access,
         );
 
-        await this.redisService.set(
-          `role-${role.id.toString()}`,
-          JSON.stringify(redisPermissions),
+        const key: string = this.redisService.generateRoleKey(
+          role.id.toString(),
         );
+        await this.redisService.set(key, JSON.stringify(redisPermissions));
       }
 
       // Commit the transaction
@@ -225,7 +225,10 @@ export class RoleService {
       if (permissionIds && permissionIds.length > 0) {
         // Remove existing role permissions
         await rolePermissionRep.delete({ role: { id } });
-        await this.redisService.del(`role-${role.id.toString()}`);
+        const key: string = this.redisService.generateRoleKey(
+          role.id.toString(),
+        );
+        await this.redisService.del(key);
 
         // Find duplicates in the rolePermissions array
         this._checkDuplicatesPermissionsIds(permissionIds);
@@ -245,10 +248,8 @@ export class RoleService {
         const redisPermissions: PermissionEnum[] = permissions.map(
           (permission) => permission.access,
         );
-        await this.redisService.set(
-          `role-${role.id.toString()}`,
-          JSON.stringify(redisPermissions),
-        );
+
+        await this.redisService.set(key, JSON.stringify(redisPermissions));
       }
 
       await roleRep.save(role);
@@ -288,7 +289,8 @@ export class RoleService {
       await roleRep.delete({ id });
 
       // Delete role from Redis Common
-      await this.redisService.del(`role-${role.id.toString()}`);
+      const key: string = this.redisService.generateRoleKey(role.id.toString());
+      await this.redisService.del(key);
 
       // Commit the transaction
       await queryRunner.commitTransaction();

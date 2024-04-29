@@ -9,7 +9,7 @@ import { DataSource, QueryRunner, Repository } from 'typeorm';
 import { File } from './entities/file.entity';
 import { createTransaction } from '../utils/create-transaction.util';
 import { User } from '../auth/entities';
-import { PageMetaDto } from '../utils/dto/page-meta.dto';
+import { PageMetaDto } from '../common/dto/page-meta.dto';
 
 @Injectable()
 export class FileService {

@@ -20,7 +20,6 @@ import {
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { ApiOkResponseSuccess } from '../utils/ApiOkResponseSuccess.util';
-import { AccessTokenGuard, PermissionGuard } from '../utils/guard';
 import {
   DeleteAvatarResDto,
   GetProfileResDto,
@@ -29,9 +28,10 @@ import {
   UpdateProfileDto,
   UpdateProfileResDto,
 } from './dto';
-import { PermissionEnum } from '../utils/enums/permission.enum';
-import { Permissions } from '../utils/decorator/permissions.decorator';
+import { Permissions } from '../common/decorator/permissions.decorator';
 import { User } from '../auth/entities';
+import { PermissionEnum } from '../common/enums';
+import { AccessTokenGuard, PermissionGuard } from '../common/guard';
 
 @ApiTags('profile')
 @ApiBearerAuth()

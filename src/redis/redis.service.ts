@@ -1,5 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import Redis from 'ioredis';
+import { RedisKeyEnum } from './enum/redis-key.enum';
 
 @Injectable()
 export class RedisService {
@@ -28,5 +29,13 @@ export class RedisService {
 
   async ping(): Promise<'PONG'> {
     return this.redisAuth.ping();
+  }
+
+  generateRefreshKey(value: string): string {
+    return `${RedisKeyEnum.REFRESH}-${value}`;
+  }
+
+  generateRoleKey(value: string): string {
+    return `${RedisKeyEnum.ROLE}-${value}`;
   }
 }

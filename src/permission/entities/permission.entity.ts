@@ -1,6 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
 import { RolePermission } from '../../role/entities';
-import { PermissionEnum } from '../../utils/enums/permission.enum';
+import { PermissionEnum } from '../../common/enums';
 
 @Entity({ name: 'permissions' })
 export class Permission {

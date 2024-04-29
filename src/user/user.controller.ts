@@ -19,7 +19,6 @@ import {
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { ApiOkResponseSuccess } from '../utils/ApiOkResponseSuccess.util';
-import { AccessTokenGuard, PermissionGuard } from '../utils/guard';
 import {
   GetAllUsersResDto,
   GetUserResDto,
@@ -27,9 +26,10 @@ import {
   UpdateUserDto,
   UpdateUserResDto,
 } from './dto';
-import { PermissionEnum } from '../utils/enums/permission.enum';
-import { Permissions } from '../utils/decorator/permissions.decorator';
 import { User } from '../auth/entities';
+import { PermissionEnum } from '../common/enums/permission.enum';
+import { Permissions } from '../common/decorator/permissions.decorator';
+import { AccessTokenGuard, PermissionGuard } from '../common/guard';
 
 @ApiTags('users')
 @ApiBearerAuth()

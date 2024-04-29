@@ -25,7 +25,6 @@ import {
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { ApiOkResponseSuccess } from '../utils/ApiOkResponseSuccess.util';
-import { AccessTokenGuard, PermissionGuard } from '../utils/guard';
 import {
   AssignRoleResDto,
   CreateRoleDto,
@@ -40,8 +39,9 @@ import {
 } from './dto';
 import { Role } from './entities';
 import { User, UsersRoles } from '../auth/entities';
-import { PermissionEnum } from '../utils/enums/permission.enum';
-import { Permissions } from '../utils/decorator/permissions.decorator';
+import { Permissions } from '../common/decorator/permissions.decorator';
+import { PermissionEnum } from '../common/enums';
+import { AccessTokenGuard, PermissionGuard } from '../common/guard';
 
 @ApiTags('roles')
 @ApiBearerAuth()

@@ -3,7 +3,6 @@ import {
   InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
-import { PageMetaDto } from '../utils/dto/page-meta.dto';
 import {
   GetAllUsersResDto,
   GetUsersQueryDto,
@@ -13,6 +12,7 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from '../auth/entities';
 import { Repository } from 'typeorm';
+import { PageMetaDto } from '../common/dto/page-meta.dto';
 
 @Injectable()
 export class UserService {

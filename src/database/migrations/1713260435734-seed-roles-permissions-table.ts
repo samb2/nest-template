@@ -3,7 +3,8 @@ import { RoleEnum } from '../../role/enum/role.enum';
 import { Permission } from '../../permission/entities/permission.entity';
 import { Role, RolePermission } from '../../role/entities';
 import { redis } from '../redis.module';
-import { PermissionEnum } from '../../utils/enums/permission.enum';
+import { PermissionEnum } from '../../common/enums';
+import { RedisKeyEnum } from '../../redis';
 
 export class SeedRolesPermissionsTable1713260435734
   implements MigrationInterface
@@ -53,11 +54,11 @@ export class SeedRolesPermissionsTable1713260435734
       for (const role of roles) {
         // Super admin
         if (role.name === RoleEnum.SUPER_ADMIN) {
-          redisSuperAdminKey = `role-${role.id.toString()}`;
+          redisSuperAdminKey = `${RedisKeyEnum.ROLE}-${role.id.toString()}`;
         }
         // Admin
         if (role.name === RoleEnum.ADMIN) {
-          redisAdminKey = `role-${role.id.toString()}`;
+          redisAdminKey = `${RedisKeyEnum.ROLE}-${role.id.toString()}`;
           for (const permission of permissions) {
             if (
               PermissionEnum.MANAGE_ROLE === (permission.access as string) ||
@@ -77,7 +78,7 @@ export class SeedRolesPermissionsTable1713260435734
         }
         // User
         if (role.name === RoleEnum.USER) {
-          redisUserKey = `role-${role.id.toString()}`;
+          redisUserKey = `${RedisKeyEnum.ROLE}-${role.id.toString()}`;
           for (const permission of permissions) {
             if (
               PermissionEnum.MANAGE_AVATAR === (permission.access as string) ||

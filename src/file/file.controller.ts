@@ -26,16 +26,16 @@ import {
 } from '@nestjs/swagger';
 import { ImageFilterInterceptor } from './interceptors/image-filter.interceptor';
 import { ApiOkResponseSuccess } from '../utils/ApiOkResponseSuccess.util';
-import { AccessTokenGuard, PermissionGuard } from '../utils/guard';
 import {
   DeleteFileResDto,
   GetFilesQueryDto,
   UploadFileDto,
   UploadFileResDto,
 } from './dto';
-import { PermissionEnum } from '../utils/enums/permission.enum';
-import { Permissions } from '../utils/decorator/permissions.decorator';
+import { PermissionEnum } from '../common/enums';
+import { Permissions } from '../common/decorator/permissions.decorator';
 import { File } from './entities/file.entity';
+import { AccessTokenGuard, PermissionGuard } from '../common/guard';
 
 @ApiTags('files')
 @Controller('files')

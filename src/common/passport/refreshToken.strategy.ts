@@ -3,7 +3,7 @@ import { ExtractJwt, Strategy } from 'passport-jwt';
 import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { RedisService } from '../../redis';
-import { JwtRefreshPayload } from '../interfaces/jwt-refresh-payload.interface';
+import { JwtRefreshPayload } from '../interfaces';
 
 @Injectable()
 export class RefreshTokenStrategy extends PassportStrategy(
@@ -26,9 +26,8 @@ export class RefreshTokenStrategy extends PassportStrategy(
   async validate(req: any, payload: JwtRefreshPayload): Promise<string> {
     // get refresh token
     const token = req.headers.authorization.split(' ')[1];
-    const redisRefreshToken: string = await this.redisService.get(
-      `REFRESH-${payload.id}`,
-    );
+    const key: string = this.redisService.generateRefreshKey(payload.id);
+    const redisRefreshToken: string = await this.redisService.get(key);
     if (token !== redisRefreshToken) {
       throw new UnauthorizedException();
     }

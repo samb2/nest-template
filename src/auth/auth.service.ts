@@ -32,9 +32,8 @@ import { ResetPassword, User, UsersRoles } from './entities';
 import { Role } from '../role/entities';
 import { RedisService } from '../redis';
 import { EventEmitter2 } from '@nestjs/event-emitter';
-import { JwtRefreshPayload } from '../utils/interfaces/jwt-refresh-payload.interface';
-import { JwtAccessPayload } from '../utils/interfaces/jwt-access-payload.interface';
 import { EventEnum } from '../events/enum/event.enum';
+import { JwtAccessPayload, JwtRefreshPayload } from '../common/interfaces';
 
 @Injectable()
 export class AuthService implements IAuthServiceInterface {
@@ -161,7 +160,8 @@ export class AuthService implements IAuthServiceInterface {
       );
 
       // Save Refresh Token In Cache
-      await this.redisService.set(`REFRESH-${user.id}`, refresh_token);
+      const key: string = this.redisService.generateRefreshKey(user.id);
+      await this.redisService.set(key, refresh_token);
 
       // Return user details and tokens
       return { user, access_token, refresh_token };
@@ -299,7 +299,8 @@ export class AuthService implements IAuthServiceInterface {
   public async logout(user: User): Promise<LogoutResDto> {
     try {
       // Set the refresh token in Redis to an empty string to invalidate it
-      await this.redisService.set(`REFRESH-${user.id}`, '');
+      const key: string = this.redisService.generateRefreshKey(user.id);
+      await this.redisService.set(key, '');
 
       // Return success message
       return { message: 'Logout Successfully' };

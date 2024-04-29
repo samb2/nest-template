@@ -10,9 +10,9 @@ import { ConfigService } from '@nestjs/config';
 import helmet from 'helmet';
 import * as compression from 'compression';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { winstonLogger } from './utils/logger/winston.module';
-import { ResponseInterceptor } from './utils/interceptors/response.interceptor';
-import { HttpExceptionFilter } from './utils/exceptions/httpExceptionFilter.exception';
+import { winstonLogger } from './common/logger/winston.module';
+import { ResponseInterceptor } from './common/interceptors/response.interceptor';
+import { HttpExceptionFilter } from './common/exceptions/httpExceptionFilter.exception';
 
 async function bootstrap(): Promise<void> {
   const app: INestApplication = await NestFactory.create(AppModule);

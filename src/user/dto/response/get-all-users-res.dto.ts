@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { PageMetaDto } from '../../../utils/dto/page-meta.dto';
 import { User } from '../../../auth/entities';
+import { PageMetaDto } from '../../../common/dto/page-meta.dto';
 
 export class GetAllUsersResDto {
   @ApiProperty({ type: [User] })

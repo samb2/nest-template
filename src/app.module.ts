@@ -8,9 +8,7 @@ import { DatabaseModule } from './database/database.module';
 import { HealthController } from './health/health.controller';
 import { TerminusModule } from '@nestjs/terminus';
 import { PassportModule } from '@nestjs/passport';
-import { AccessTokenStrategy, RefreshTokenStrategy } from './utils/passport';
 import { RedisHealthIndicator, RedisModule } from './redis';
-import { LoggerMiddleware } from './utils/middleware/logger.middleware';
 import { AuthModule } from './auth/auth.module';
 import { EventsModule } from './events/events.module';
 import { RoleModule } from './role/role.module';
@@ -19,8 +17,9 @@ import { TokenModule } from './token/token.module';
 import { UserModule } from './user/user.module';
 import { ProfileModule } from './profile/profile.module';
 import { MinioModule } from './minio/minio.module';
-import { EmailModule } from './email/email.module';
 import { FileModule } from './file/file.module';
+import { AccessTokenStrategy, RefreshTokenStrategy } from './common/passport';
+import { LoggerMiddleware } from './common/middleware/logger.middleware';
 
 @Module({
   imports: [

@@ -30,7 +30,7 @@ import {
   ResetPasswordDto,
   ResetPasswordResDto,
 } from './dto';
-import { AccessTokenGuard, RefreshTokenGuard } from '../utils/guard';
+import { AccessTokenGuard, RefreshTokenGuard } from '../common/guard';
 
 @ApiTags('auth service')
 @Controller('auth')

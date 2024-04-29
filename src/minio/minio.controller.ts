@@ -7,11 +7,11 @@ import {
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { ApiOkResponseSuccess } from '../utils/ApiOkResponseSuccess.util';
-import { AccessTokenGuard, PermissionGuard } from '../utils/guard';
 import { GetBucketResDto } from './dto';
-import { PermissionEnum } from '../utils/enums/permission.enum';
-import { Permissions } from '../utils/decorator/permissions.decorator';
+import { PermissionEnum } from '../common/enums';
+import { Permissions } from '../common/decorator/permissions.decorator';
 import { BucketEnum } from './enum/bucket.enum';
+import { AccessTokenGuard, PermissionGuard } from '../common/guard';
 
 @ApiTags('minio')
 @Controller('minio')
