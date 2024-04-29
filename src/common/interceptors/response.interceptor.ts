@@ -40,7 +40,6 @@ export class ResponseInterceptor implements NestInterceptor {
       this.reflector.get<number>('__httpCode__', context.getHandler()) || 200;
 
     const responseObj: any = {
-      from: this.configService.get<string>('server.service_name'),
       success: true,
       statusCode: status,
       message: this.statusMessages[status],

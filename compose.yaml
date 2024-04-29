@@ -61,6 +61,8 @@ services:
   redis:
     image: redis/redis-stack:latest
     restart: always
+    env_file:
+      - .env
     environment:
       REDIS_ARGS: "--requirepass ${DOCKER_REDIS_PASS}"
     container_name: redis
