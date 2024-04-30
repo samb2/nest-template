@@ -1,0 +1,105 @@
+services:
+  postgres:
+    image: postgres
+    restart: always
+    user: postgres
+    container_name: postgres
+    env_file:
+      - .env
+    ports:
+      - "5432:5432"
+    command: postgres -c 'max_connections=500' -c 'idle_in_transaction_session_timeout=20000' -c 'statement_timeout=20000'
+    environment:
+      - POSTGRES_USER=${DOCKER_POSTGRES_USER}
+      - POSTGRES_PASSWORD=${DOCKER_POSTGRES_PASSWORD}
+      - POSTGRES_DB=${DOCKER_POSTGRES_NAME}
+    volumes:
+      - postgres:/var/lib/postgresql/data/:rw
+    healthcheck:
+      test: [ "CMD", "pg_isready" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - backend_network
+
+  minio:
+    image: "minio/minio"
+    restart: always
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    command: minio server /data --console-address ":9001"
+    container_name: minio-file
+    env_file:
+      - .env.production
+    volumes:
+      - minio:/data
+    environment:
+      - MINIO_ROOT_USER=${DOCKER_MINIO_USER}
+      - MINIO_ROOT_PASSWORD=${DOCKER_MINIO_PASSWORD}
+    networks:
+      - backend_network
+
+  redis:
+    image: redis/redis-stack:latest
+    restart: always
+    env_file:
+      - .env
+    environment:
+      REDIS_ARGS: "--requirepass ${DOCKER_REDIS_PASS}"
+    container_name: redis
+    ports:
+      - "6379:6379"
+      - "8001:8001"
+    volumes:
+      - redis:/data
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    networks:
+      - backend_network
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin4_container
+    restart: always
+    env_file:
+      - .env.production
+    ports:
+      - "8888:80"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${DOCKER_PGADMIN_EMAIL}
+      PGADMIN_DEFAULT_PASSWORD: ${DOCKER_PGADMIN_PASSWORD}
+    volumes:
+      - pgadmin:/var/lib/pgadmin
+    networks:
+      - backend_network
+
+  portainer:
+    image: portainer/portainer-ce
+    container_name: portainer
+    restart: always
+    ports:
+      - "9003:9000"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - portainer:/data
+    networks:
+      - backend_network
+
+volumes:
+  portainer:
+  pgadmin:
+  postgres:
+  minio:
+  redis:
+
+networks:
+  backend_network:
+    driver: bridge
+
+
