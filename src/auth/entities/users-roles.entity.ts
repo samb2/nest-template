@@ -6,7 +6,7 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { User } from './user.entity';
-import { Role } from '../../role/entities/role.entity';
+import { Role } from '../../role/entities';
 
 @Unique(['role', 'user'])
 @Entity({ name: 'users_roles' })
