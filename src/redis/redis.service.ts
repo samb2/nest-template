@@ -1,41 +1,65 @@
 import { Inject, Injectable } from '@nestjs/common';
-import Redis from 'ioredis';
+import Redis, { RedisKey } from 'ioredis';
+import { IRedisServiceInterface } from './interface/IRedisService.interface';
 import { RedisKeyEnum } from './enum/redis-key.enum';
 
 @Injectable()
-export class RedisService {
-  constructor(@Inject('Redis') private readonly redisAuth: Redis) {}
+export class RedisService implements IRedisServiceInterface {
+  constructor(@Inject('Redis') private readonly redisClient: Redis) {}
 
-  async get(key: string): Promise<string> {
-    return this.redisAuth.get(key);
+  async get(key: RedisKey): Promise<string | null> {
+    return this.redisClient.get(key);
   }
 
-  async set(key: string, value: string): Promise<'OK'> {
-    return this.redisAuth.set(key, value);
+  async set(
+    key: RedisKey,
+    value: string | number | Buffer,
+    expiration?: number,
+  ): Promise<void> {
+    if (expiration) {
+      await this.redisClient.set(key, value, 'EX', expiration);
+    }
+    await this.redisClient.set(key, value);
   }
 
-  async del(key: string): Promise<number> {
-    return this.redisAuth.del(key);
+  async delete(key: RedisKey): Promise<number> {
+    return this.redisClient.del(key);
   }
 
   // Other Redis operations
-  async hset(key: string, field: string, value: string): Promise<number> {
-    return this.redisAuth.hset(key, field, value);
+  async hSet(
+    key: RedisKey,
+    field: string | Buffer | number,
+    value: string | Buffer | number,
+  ): Promise<number> {
+    return this.redisClient.hset(key, field, value);
   }
 
-  async hget(key: string, field: string): Promise<string | null> {
-    return this.redisAuth.hget(key, field);
+  async hGet(key: RedisKey, field: string | Buffer): Promise<string | null> {
+    return this.redisClient.hget(key, field);
   }
 
-  async ping(): Promise<'PONG'> {
-    return this.redisAuth.ping();
+  async setEx(
+    key: RedisKey,
+    second: string | number,
+    value: string | number | Buffer,
+  ): Promise<void> {
+    await this.redisClient.setex(key, second, value);
   }
 
-  generateRefreshKey(value: string): string {
-    return `${RedisKeyEnum.REFRESH}-${value}`;
+  async getEx(key: RedisKey): Promise<string | null> {
+    return this.redisClient.getex(key);
+  }
+
+  async ping(): Promise<string> {
+    return this.redisClient.ping();
   }
 
   generateRoleKey(value: string): string {
     return `${RedisKeyEnum.ROLE}-${value}`;
+  }
+
+  generateRefreshKey(value: string): string {
+    return `${RedisKeyEnum.REFRESH}-${value}`;
   }
 }

@@ -6,9 +6,9 @@ export const redisAuthFactory: FactoryProvider<Redis> = {
   provide: 'Redis',
   useFactory: (configService: ConfigService) => {
     const redisInstance: Redis = new Redis({
-      host: configService.get('redis.host_auth'),
-      port: configService.get('redis.port_auth'),
-      password: configService.get('redis.password_auth'),
+      host: configService.get('redis.host'),
+      port: configService.get('redis.port'),
+      password: configService.get('redis.password'),
     });
 
     redisInstance.on('error', (e) => {

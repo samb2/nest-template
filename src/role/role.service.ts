@@ -228,7 +228,7 @@ export class RoleService {
         const key: string = this.redisService.generateRoleKey(
           role.id.toString(),
         );
-        await this.redisService.del(key);
+        await this.redisService.delete(key);
 
         // Find duplicates in the rolePermissions array
         this._checkDuplicatesPermissionsIds(permissionIds);
@@ -290,7 +290,7 @@ export class RoleService {
 
       // Delete role from Redis Common
       const key: string = this.redisService.generateRoleKey(role.id.toString());
-      await this.redisService.del(key);
+      await this.redisService.delete(key);
 
       // Commit the transaction
       await queryRunner.commitTransaction();
