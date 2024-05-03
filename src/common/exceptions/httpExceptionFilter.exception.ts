@@ -8,44 +8,51 @@ import {
 } from '@nestjs/common';
 import { Response } from 'express';
 import { HttpArgumentsHost } from '@nestjs/common/interfaces';
-import { ConfigService } from '@nestjs/config';
 import * as process from 'process';
 
 @Catch(HttpException)
 export class HttpExceptionFilter implements ExceptionFilter {
-  private logger = new Logger('HTTP');
-
-  constructor(private readonly configService: ConfigService) {}
+  private logger: Logger = new Logger('HTTP');
 
   async catch(exception: HttpException, host: ArgumentsHost): Promise<void> {
     const context: HttpArgumentsHost = host.switchToHttp();
     const response = context.getResponse<Response>();
-    const serverName: string | undefined = this.configService.get<string>(
-      'server.service_name',
-    );
+
+    // Determine status code from the exception or default to internal server error
     const statusCode: number =
       exception instanceof HttpException
         ? exception.getStatus()
         : HttpStatus.INTERNAL_SERVER_ERROR;
-    const result = exception.getResponse();
+
+    // Get the response content from the exception
+    const result: string | object = exception.getResponse();
+
+    // Check if the response content is an object
     if (typeof result === 'object') {
+      // Prepare response data with additional 'success' field
       const responseData = {
-        from: serverName,
         success: false,
         ...result,
       };
 
+      // Log error details if not in test environment
       if (process.env.NODE_ENV !== 'test') {
         this.logger.error(responseData);
       }
+
+      // Send JSON response with appropriate status code
       response.status(statusCode).json(responseData);
     } else {
-      const message = exception.message;
+      // If response content is a string, treat it as message
+      const message: string = exception.message;
+
+      // Log error message if not in test environment
       if (process.env.NODE_ENV !== 'test') {
         this.logger.error(message);
       }
+
+      // Send JSON response with error message and status code
       response.status(statusCode).json({
-        from: serverName,
         success: false,
         statusCode,
         message,

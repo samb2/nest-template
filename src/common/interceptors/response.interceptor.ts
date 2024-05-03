@@ -7,7 +7,6 @@ import {
 import { firstValueFrom, Observable, of } from 'rxjs';
 import { Reflector } from '@nestjs/core';
 import { ConfigService } from '@nestjs/config';
-import * as process from 'process';
 
 @Injectable()
 export class ResponseInterceptor implements NestInterceptor {
@@ -34,11 +33,16 @@ export class ResponseInterceptor implements NestInterceptor {
   ): Promise<Observable<any>> {
     const now = Date.now();
     const request = context.switchToHttp().getRequest();
-    const env: string | undefined = process.env.NODE_ENV;
+    const env: string | undefined = this.configService.get('server.node_env');
+
+    // Get the response body from the next call handler
     const body = await firstValueFrom(next.handle());
+
+    // Get the HTTP status code from metadata or default to 200
     const status: number =
       this.reflector.get<number>('__httpCode__', context.getHandler()) || 200;
 
+    // Construct the response object with standard structure
     const responseObj: any = {
       success: true,
       statusCode: status,
@@ -47,11 +51,13 @@ export class ResponseInterceptor implements NestInterceptor {
       path: request.url,
       method: request.method,
     };
+
     // Conditionally add time for development environment
     if (env === 'development') {
       responseObj.responseTime = `${Date.now() - now}ms`;
     }
 
+    // Return the modified response as an observable
     return of(responseObj);
   }
 }

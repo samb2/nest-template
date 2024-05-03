@@ -38,7 +38,7 @@ async function bootstrap(): Promise<void> {
   // Using ResponseInterceptor as global Response
   app.useGlobalInterceptors(new ResponseInterceptor(reflector, configService));
   // Using HttpExceptionFilter as global Error handler
-  app.useGlobalFilters(new HttpExceptionFilter(configService));
+  app.useGlobalFilters(new HttpExceptionFilter());
   app.enableCors(configService.get<object>('cors.origin'));
 
   app.setGlobalPrefix('/api');

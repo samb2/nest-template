@@ -22,6 +22,7 @@ export class PermissionGuard implements CanActivate {
       'permission',
       context.getHandler(),
     );
+
     // If no permission is set, allow access
     if (!permission) {
       return true;
@@ -36,13 +37,14 @@ export class PermissionGuard implements CanActivate {
     }
 
     // Retrieve permissions from Redis for each role asynchronously
-    const promises: Promise<string>[] = req.roles.map((role) => {
+    const promises: Promise<string>[] = req.roles.map((role: number) => {
       const key: string = this.redisService.generateRoleKey(role.toString());
       return this.redisService.get(key);
     });
     const redisPermissions: string[] = await Promise.all(promises);
+
     // Parse Redis permissions and add them to the userPermissions array
-    const permissions: any[] = redisPermissions.map((redisPermission) =>
+    const permissions: any[] = redisPermissions.map((redisPermission: string) =>
       JSON.parse(redisPermission),
     );
     const userPermissions: string[] = permissions.flat();
@@ -50,6 +52,7 @@ export class PermissionGuard implements CanActivate {
     // Extract the access name from the permission and check for manage permission
     const accessName: string = permission.split('_')[1];
     const manage: string = `manage_${accessName}`;
+
     // Allow access if the user has the manage permission or the specific permission
     return (
       userPermissions.includes(manage) || userPermissions.includes(permission)
