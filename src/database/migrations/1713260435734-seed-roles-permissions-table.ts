@@ -106,8 +106,8 @@ export class SeedRolesPermissionsTable1713260435734
       await queryRunner.commitTransaction();
     } catch (e) {
       // Rollback the transaction if there's an error
-      await queryRunner.rollbackTransaction();]\
-      
+      await queryRunner.rollbackTransaction();
+
       throw e;
     }
   }
