@@ -14,7 +14,7 @@ export class TokenService {
   public generateToken(
     payload: JwtRefreshPayload,
     type: TokenTypeEnum,
-  ): string {
+  ): Promise<string> {
     let secretKey: string;
     switch (type) {
       case TokenTypeEnum.ACCESS:
@@ -30,10 +30,14 @@ export class TokenService {
         throw new Error('Invalid token type');
     }
     const expiresIn: string = type === TokenTypeEnum.REFRESH ? '30d' : '30m';
-    return this.jwtService.sign(payload, { secret: secretKey, expiresIn });
+    return this.jwtService.signAsync(payload, { secret: secretKey, expiresIn });
   }
 
   public verify(token: string, secret: string): any {
-    return this.jwtService.verify(token, { secret });
+    try {
+      return this.jwtService.verify(token, { secret });
+    } catch (e) {
+      return false;
+    }
   }
 }

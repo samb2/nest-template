@@ -24,7 +24,7 @@ export interface IAuthServiceInterface {
     resetPasswordDto: ResetPasswordDto,
   ): Promise<ResetPasswordResDto>;
 
-  refresh(email: string): RefreshResDto;
+  refresh(email: string): Promise<RefreshResDto>;
 
   logout(user: User): Promise<object>;
 }

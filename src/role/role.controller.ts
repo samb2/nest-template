@@ -45,6 +45,7 @@ import { AccessTokenGuard, PermissionGuard } from '../common/guard';
 
 @ApiTags('roles')
 @ApiBearerAuth()
+@ApiUnauthorizedResponse({ description: 'Unauthorized' })
 @Controller('roles')
 export class RoleController {
   constructor(private readonly roleService: RoleService) {}
@@ -55,7 +56,6 @@ export class RoleController {
   @ApiOperation({ summary: 'create role' })
   @ApiBody({ type: CreateRoleDto })
   @ApiOkResponseSuccess(CreateRoleResDto, 200)
-  @ApiUnauthorizedResponse({ description: 'Unauthorized' })
   @ApiBadRequestResponse({
     description: 'Duplicated permission IDs found: ',
   })
@@ -72,7 +72,6 @@ export class RoleController {
   @Get()
   @ApiOperation({ summary: 'get all roles' })
   @ApiOkResponseSuccess(GetAllRoleResDto, 200)
-  @ApiUnauthorizedResponse({ description: 'Unauthorized' })
   @ApiQuery({ type: GetRoleQueryDto })
   findAll(@Query() getRoleDto?: GetRoleQueryDto): Promise<GetAllRoleResDto> {
     return this.roleService.findAll(getRoleDto);
@@ -83,7 +82,6 @@ export class RoleController {
   @Get(':id')
   @ApiOperation({ summary: 'get a role with id' })
   @ApiOkResponseSuccess(GetRoleResDto)
-  @ApiUnauthorizedResponse({ description: 'Unauthorized' })
   @ApiNotFoundResponse({ description: 'Role not found!' })
   findOne(@Param('id') id: string): Promise<Role> {
     return this.roleService.findOne(+id);
@@ -101,7 +99,6 @@ export class RoleController {
   @ApiBody({ type: UpdateRoleDto })
   @ApiOkResponseSuccess(GetRoleResDto)
   @ApiBadRequestResponse({ description: 'Bad request' })
-  @ApiUnauthorizedResponse({ description: 'Unauthorized' })
   @ApiNotFoundResponse({ description: 'Role not found' })
   @ApiConflictResponse({ description: 'Role name already exists' })
   update(
@@ -121,7 +118,6 @@ export class RoleController {
     description: 'ID of the role to delete',
   })
   @ApiOkResponseSuccess(DeleteRoleResDto)
-  @ApiUnauthorizedResponse({ description: 'Unauthorized' })
   @ApiNotFoundResponse({ description: 'Role not found' })
   remove(@Param('id') id: string): Promise<DeleteRoleResDto> {
     return this.roleService.remove(+id);
@@ -137,7 +133,6 @@ export class RoleController {
     description: 'ID of the user to get roles for',
   })
   @ApiOkResponseSuccess(RoleUserResDto)
-  @ApiUnauthorizedResponse({ description: 'Unauthorized' })
   @ApiNotFoundResponse({ description: 'User not found' })
   getUserRoles(@Param('userId', ParseUUIDPipe) userId: string): Promise<User> {
     return this.roleService.getUserRoles(userId);
@@ -154,7 +149,6 @@ export class RoleController {
     required: true,
   })
   @ApiOkResponseSuccess(AssignRoleResDto)
-  @ApiUnauthorizedResponse({ description: 'Unauthorized' })
   @ApiNotFoundResponse({ description: 'Role or user not found.' })
   @ApiConflictResponse({
     description: 'This role is already assigned to this user.',
@@ -173,7 +167,6 @@ export class RoleController {
   @ApiParam({ name: 'id', description: 'The role ID', required: true })
   @ApiParam({ name: 'userId', description: 'The user ID', required: true })
   @ApiOkResponseSuccess(DeleteRoleUserResDto)
-  @ApiUnauthorizedResponse({ description: 'Unauthorized' })
   @ApiNotFoundResponse({ description: 'Role or User not found.' })
   deleteUserRole(
     @Param('id', ParseIntPipe) id: number,

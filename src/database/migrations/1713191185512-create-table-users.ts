@@ -15,8 +15,8 @@ export class CreateTableUsers1713191185512 implements MigrationInterface {
             is_delete   boolean                                        NOT NULL DEFAULT false,
             super_admin boolean                                        NOT NULL DEFAULT false,
             admin       boolean                                        NOT NULL DEFAULT false,
-            created_at  timestamp without time zone                    NOT NULL DEFAULT now(),
-            updated_at  timestamp without time zone                    NOT NULL DEFAULT now(),
+            created_at  timestamp with time zone                    NOT NULL DEFAULT now(),
+            updated_at  timestamp with time zone                    NOT NULL DEFAULT now(),
             CONSTRAINT "PK_a3ffb1c0c8416b9fc6f907b7433" PRIMARY KEY (id),
             CONSTRAINT "UQ_97672ac88f789774dd47f7c8be3" UNIQUE (email)
         )

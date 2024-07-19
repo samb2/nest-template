@@ -27,13 +27,15 @@ import {
   UpdateUserResDto,
 } from './dto';
 import { User } from '../auth/entities';
-import { PermissionEnum } from '../common/enums/permission.enum';
 import { Permissions } from '../common/decorator/permissions.decorator';
 import { AccessTokenGuard, PermissionGuard } from '../common/guard';
+import { PermissionEnum } from '../common/enums';
 
 @ApiTags('users')
-@ApiBearerAuth()
 @Controller('users')
+@ApiBearerAuth()
+@ApiBadRequestResponse({ description: 'Bad Request!' })
+@ApiUnauthorizedResponse({ description: 'Unauthorized' })
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
@@ -42,8 +44,6 @@ export class UserController {
   @Get()
   @ApiOperation({ summary: 'Get all users' })
   @ApiOkResponseSuccess(GetAllUsersResDto)
-  @ApiBadRequestResponse({ description: 'Bad Request!' })
-  @ApiUnauthorizedResponse({ description: 'Unauthorized' })
   @ApiQuery({ name: 'is_delete', required: false, type: Boolean })
   @ApiQuery({ name: 'is_active', required: false, type: Boolean })
   @ApiQuery({ name: 'admin', required: false, type: Boolean })
@@ -58,8 +58,6 @@ export class UserController {
   @Get(':id')
   @ApiOperation({ summary: 'Get a user info' })
   @ApiOkResponseSuccess(GetUserResDto)
-  @ApiBadRequestResponse({ description: 'Bad Request!' })
-  @ApiUnauthorizedResponse({ description: 'Unauthorized' })
   @ApiNotFoundResponse({ description: 'User not found!' })
   findOne(@Param('id', ParseUUIDPipe) id: string): Promise<User> {
     return this.userService.findOne(id);
@@ -70,8 +68,6 @@ export class UserController {
   @Patch(':id')
   @ApiOperation({ summary: 'Update a user' })
   @ApiOkResponseSuccess(UpdateUserResDto)
-  @ApiBadRequestResponse({ description: 'Bad Request!' })
-  @ApiUnauthorizedResponse({ description: 'Unauthorized' })
   @ApiNotFoundResponse({ description: 'User not found!' })
   update(
     @Param('id', ParseUUIDPipe) id: string,

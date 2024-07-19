@@ -8,8 +8,8 @@ export class CreateTableRoles1713191314512 implements MigrationInterface {
             id          integer                                        NOT NULL,
             name        character varying COLLATE pg_catalog."default" NOT NULL,
             description character varying COLLATE pg_catalog."default",
-            created_at  timestamp without time zone                    NOT NULL DEFAULT now(),
-            updated_at  timestamp without time zone                    NOT NULL DEFAULT now(),
+            created_at  timestamp with time zone                    NOT NULL DEFAULT now(),
+            updated_at  timestamp with time zone                    NOT NULL DEFAULT now(),
             CONSTRAINT "PK_c1433d71a4838793a49dcad46ab" PRIMARY KEY (id),
             CONSTRAINT "UQ_648e3f5447f725579d7d4ffdfb7" UNIQUE (name)
         )`);

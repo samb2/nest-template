@@ -13,7 +13,7 @@ export class CreateTableFiles1714389303585 implements MigrationInterface {
             bucket      character varying COLLATE pg_catalog."default" NOT NULL,
             path        character varying COLLATE pg_catalog."default" NOT NULL,
             uploaded_by character varying COLLATE pg_catalog."default" NOT NULL,
-            created_at  timestamp without time zone                    NOT NULL DEFAULT now(),
+            created_at  timestamp with time zone                    NOT NULL DEFAULT now(),
             CONSTRAINT "PK_6c16b9093a142e0e7613b04a3d9" PRIMARY KEY (id),
             CONSTRAINT "UQ_a5c218dfdf6ad6092fed2230a88" UNIQUE (key)
         )

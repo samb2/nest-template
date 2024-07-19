@@ -115,7 +115,7 @@ export class AuthService implements IAuthServiceInterface {
     try {
       // Find the user by email and ensure they are not marked for deletion
       const user: User = await this.userRepository.findOne({
-        where: { email, isDelete: false },
+        where: { email },
         select: {
           id: true,
           password: true,
@@ -150,11 +150,11 @@ export class AuthService implements IAuthServiceInterface {
         id: user.id,
         roles: roleIds,
       };
-      const refresh_token: string = this.tokenService.generateToken(
+      const refresh_token: string = await this.tokenService.generateToken(
         refreshPayload,
         TokenTypeEnum.REFRESH,
       );
-      const access_token: string = this.tokenService.generateToken(
+      const access_token: string = await this.tokenService.generateToken(
         accessPayload,
         TokenTypeEnum.ACCESS,
       );
@@ -186,7 +186,7 @@ export class AuthService implements IAuthServiceInterface {
       // If user exists and is active, generate reset password token and save it
       if (user && user.isActive) {
         const payload: JwtForgotPayload = { id: user.id };
-        const token: string = this.tokenService.generateToken(
+        const token: string = await this.tokenService.generateToken(
           payload,
           TokenTypeEnum.EMAIL,
         );
@@ -280,11 +280,11 @@ export class AuthService implements IAuthServiceInterface {
     }
   }
 
-  public refresh(id: string): RefreshResDto {
+  public async refresh(id: string): Promise<RefreshResDto> {
     try {
       // Generate new access token using the provided authId
       const payload: JwtRefreshPayload = { id };
-      const access_token: string = this.tokenService.generateToken(
+      const access_token: string = await this.tokenService.generateToken(
         payload,
         TokenTypeEnum.ACCESS,
       );

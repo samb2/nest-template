@@ -40,6 +40,7 @@ import { AccessTokenGuard, PermissionGuard } from '../common/guard';
 @ApiTags('files')
 @Controller('files')
 @ApiBearerAuth()
+@ApiUnauthorizedResponse({ description: 'Unauthorized.' })
 export class FileController {
   constructor(private readonly fileService: FileService) {}
 
@@ -52,7 +53,6 @@ export class FileController {
   })
   @ApiOkResponseSuccess(UploadFileResDto)
   @ApiBadRequestResponse({ description: 'Bad Request!' })
-  @ApiUnauthorizedResponse({ description: 'Unauthorized.' })
   @ApiInternalServerErrorResponse()
   @ApiConsumes('multipart/form-data')
   @ApiBody({
@@ -72,7 +72,6 @@ export class FileController {
   @Get()
   @ApiOperation({ summary: 'Find all files' })
   @ApiOkResponseSuccess(UploadFileResDto, 200, true)
-  @ApiUnauthorizedResponse({ description: 'Unauthorized.' })
   findAll(@Query() getFileDto?: GetFilesQueryDto): Promise<UploadFileResDto> {
     return this.fileService.findAll(getFileDto);
   }

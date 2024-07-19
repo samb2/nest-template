@@ -24,6 +24,7 @@ import { PermissionEnum } from '../common/enums';
 
 @ApiTags('permissions')
 @ApiBearerAuth()
+@ApiUnauthorizedResponse({ description: 'Unauthorized' })
 @Controller('permissions')
 export class PermissionController {
   constructor(private readonly permissionService: PermissionService) {}
@@ -33,7 +34,6 @@ export class PermissionController {
   @Get()
   @ApiOperation({ summary: 'Get all permissions' })
   @ApiOkResponseSuccess(GetPermissionRes, 200, true)
-  @ApiUnauthorizedResponse({ description: 'Unauthorized' })
   findAll(
     @Query() getPermissionDto?: GetPermissionQueryDto,
   ): Promise<GetPermissionRes> {
@@ -45,7 +45,6 @@ export class PermissionController {
   @Get(':id')
   @ApiOperation({ summary: 'Get a permission' })
   @ApiOkResponseSuccess(GetPermissionRes)
-  @ApiUnauthorizedResponse({ description: 'Unauthorized' })
   @ApiBadRequestResponse({ description: 'Bad Request!' })
   @ApiNotFoundResponse({ description: 'Permission not found!' })
   findOne(@Param('id', ParseUUIDPipe) id: string): Promise<Permission> {

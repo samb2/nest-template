@@ -5,9 +5,10 @@ import {
   PrimaryColumn,
   BeforeInsert,
   UpdateDateColumn,
+  CreateDateColumn,
 } from 'typeorm';
 import { RolePermission } from './role-permission.entity';
-import { UsersRoles } from '../../auth/entities/users-roles.entity';
+import { UsersRoles } from '../../auth/entities';
 
 @Entity({ name: 'roles' })
 export class Role {
@@ -20,17 +21,12 @@ export class Role {
   @Column({ nullable: true })
   description: string;
 
-  @Column({
-    name: 'created_at',
-    type: 'timestamp',
-    default: () => 'CURRENT_TIMESTAMP',
-  })
+  @CreateDateColumn({ type: 'timestamptz', name: 'created_at' })
   createdAt: Date;
 
   @UpdateDateColumn({
     name: 'updated_at',
-    type: 'timestamp',
-    default: () => 'CURRENT_TIMESTAMP',
+    type: 'timestamptz',
   })
   updatedAt: Date;
 

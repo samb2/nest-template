@@ -1,11 +1,16 @@
-import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
+import {
+  Injectable,
+  Logger,
+  OnModuleDestroy,
+  OnModuleInit,
+} from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { ForgotPasswordEvent, UserRegisteredEvent } from './dto';
 import { EventEnum } from './enum/event.enum';
 import { EmailService } from '../email/email.service';
 
 @Injectable()
-export class EventsService implements OnModuleInit {
+export class EventsService implements OnModuleInit, OnModuleDestroy {
   constructor(
     private readonly emailService: EmailService,
     private eventEmitter: EventEmitter2,
@@ -33,5 +38,13 @@ export class EventsService implements OnModuleInit {
         });
       },
     );
+  }
+
+  onModuleDestroy(): any {
+    // user-registered
+    this.eventEmitter.off(EventEnum.USER_REGISTERED, async () => {});
+
+    // forgot-password
+    this.eventEmitter.off(EventEnum.FORGOT_PASSWORD, async () => {});
   }
 }

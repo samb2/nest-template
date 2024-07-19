@@ -15,6 +15,8 @@ import { AccessTokenGuard, PermissionGuard } from '../common/guard';
 
 @ApiTags('minio')
 @Controller('minio')
+@ApiBearerAuth()
+@ApiUnauthorizedResponse({ description: 'Unauthorized' })
 export class MinioController {
   constructor(private readonly minioService: MinioService) {}
 
@@ -23,8 +25,6 @@ export class MinioController {
   @Get()
   @ApiOperation({ summary: 'get all buckets' })
   @ApiOkResponseSuccess(GetBucketResDto, 200, true)
-  @ApiUnauthorizedResponse({ description: 'Unauthorized' })
-  @ApiBearerAuth()
   findAll(): Promise<BucketEnum[]> {
     return this.minioService.findAll();
   }

@@ -151,4 +151,21 @@ export class UserService {
       throw new InternalServerErrorException(e.message);
     }
   }
+
+  public async validateUserByIdForWS(id: string): Promise<User | undefined> {
+    try {
+      return this.userRepository.findOne({
+        where: { id, isDelete: false, isActive: true },
+        select: {
+          id: true,
+          firstName: true,
+          lastName: true,
+          avatar: true,
+          email: true,
+        },
+      });
+    } catch (e) {
+      return undefined;
+    }
+  }
 }
