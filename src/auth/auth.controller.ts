@@ -82,7 +82,7 @@ export class AuthController {
   @ApiBearerAuth()
   @ApiOkResponseSuccess(RefreshResDto)
   @ApiUnauthorizedResponse({ description: 'Unauthorized' })
-  refresh(@Req() req: any): RefreshResDto {
+  refresh(@Req() req: any): Promise<RefreshResDto> {
     return this.authService.refresh(req.user);
   }
 
