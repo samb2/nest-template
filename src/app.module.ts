@@ -20,6 +20,7 @@ import { MinioModule } from './minio/minio.module';
 import { FileModule } from './file/file.module';
 import { AccessTokenStrategy, RefreshTokenStrategy } from './common/passport';
 import { LoggerMiddleware } from './common/middleware/logger.middleware';
+import { MessageModule } from './message/message.module';
 
 @Module({
   imports: [
@@ -52,6 +53,7 @@ import { LoggerMiddleware } from './common/middleware/logger.middleware';
     RoleModule,
     PermissionModule,
     TokenModule,
+    MessageModule,
   ],
   controllers: [HealthController],
   providers: [

@@ -10,7 +10,7 @@ import {
 import { Exclude } from 'class-transformer';
 import { ResetPassword } from './reset-password.entity';
 import { UsersRoles } from './users-roles.entity';
-//import { Message } from '../../message/entities/message.entity';
+import { Message } from '../../message/entities/message.entity';
 
 @Entity({ name: 'users' })
 export class User {
@@ -65,11 +65,11 @@ export class User {
   @Exclude()
   userRoles: UsersRoles[];
 
-  // @OneToMany(() => Message, (message) => message.sender)
-  // messages: Message[];
-  //
-  // @OneToMany(() => Message, (message) => message.recipient)
-  // receivedMessages: Message[];
+  @OneToMany(() => Message, (message) => message.sender)
+  messages: Message[];
+
+  @OneToMany(() => Message, (message) => message.recipient)
+  receivedMessages: Message[];
 
   @BeforeInsert()
   async normalizeEmail() {
