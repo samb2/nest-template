@@ -32,6 +32,7 @@ import { Permissions } from '../common/decorator/permissions.decorator';
 import { User } from '../auth/entities';
 import { PermissionEnum } from '../common/enums';
 import { AccessTokenGuard, PermissionGuard } from '../common/guard';
+import { RequestWithUser } from '../common/interfaces';
 
 @ApiTags('profile')
 @ApiBearerAuth()
@@ -46,7 +47,7 @@ export class ProfileController {
   @ApiOperation({ summary: 'Find one profile' })
   @ApiOkResponseSuccess(GetProfileResDto)
   @UseInterceptors(ClassSerializerInterceptor)
-  findOne(@Req() req: any): Promise<User> {
+  findOne(@Req() req: RequestWithUser): Promise<User> {
     return this.profileService.findOne(req.user);
   }
 
@@ -59,7 +60,7 @@ export class ProfileController {
   @ApiBadRequestResponse({ description: 'Bad Request' })
   update(
     @Body() updateProfileDto: UpdateProfileDto,
-    @Req() req: any,
+    @Req() req: RequestWithUser,
   ): Promise<UpdateProfileResDto> {
     return this.profileService.update(updateProfileDto, req.user);
   }
@@ -76,7 +77,7 @@ export class ProfileController {
   })
   updatePassword(
     @Body() updatePasswordDto: UpdatePasswordDto,
-    @Req() req: any,
+    @Req() req: RequestWithUser,
   ): Promise<UpdatePasswordResDto> {
     return this.profileService.updatePassword(updatePasswordDto, req.user);
   }
@@ -87,7 +88,7 @@ export class ProfileController {
   @ApiOperation({ summary: 'Delete avatar' })
   @ApiOkResponseSuccess(DeleteAvatarResDto)
   @ApiInternalServerErrorResponse()
-  deleteAvatar(@Req() req: any): Promise<DeleteAvatarResDto> {
+  deleteAvatar(@Req() req: RequestWithUser): Promise<DeleteAvatarResDto> {
     return this.profileService.deleteAvatar(req.user.id, req.user.avatar);
   }
 }

@@ -7,6 +7,7 @@ import {
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { RedisService } from '../../redis';
+import { RequestWithUser } from '../interfaces';
 
 @Injectable()
 export class PermissionGuard implements CanActivate {
@@ -29,7 +30,7 @@ export class PermissionGuard implements CanActivate {
     }
 
     // Retrieve the request object
-    const req = context.switchToHttp().getRequest();
+    const req: RequestWithUser = context.switchToHttp().getRequest();
 
     // Allow access for super admin
     if (req.user.superAdmin) {
@@ -44,18 +45,15 @@ export class PermissionGuard implements CanActivate {
     const redisPermissions: string[] = await Promise.all(promises);
 
     // Parse Redis permissions and add them to the userPermissions array
-    const permissions: any[] = redisPermissions.map((redisPermission: string) =>
-      JSON.parse(redisPermission),
-    );
-    const userPermissions: string[] = permissions.flat();
+    const permissions: string[] = redisPermissions
+      .map((redisPermission: string) => JSON.parse(redisPermission))
+      .flat();
 
     // Extract the access name from the permission and check for manage permission
     const accessName: string = permission.split('_')[1];
     const manage: string = `manage_${accessName}`;
 
     // Allow access if the user has the manage permission or the specific permission
-    return (
-      userPermissions.includes(manage) || userPermissions.includes(permission)
-    );
+    return permissions.includes(manage) || permissions.includes(permission);
   }
 }

@@ -21,7 +21,7 @@ export class FileService {
     private readonly dataSource: DataSource,
   ) {}
 
-  async uploadAvatar(image: any, user: User): Promise<File> {
+  async uploadAvatar(image: Express.Multer.File, user: User): Promise<File> {
     // Generate metadata for the file
     const metaData: object = {
       'content-type': image.mimetype,
@@ -79,6 +79,7 @@ export class FileService {
         bucketName,
         bucketKey,
         image.buffer,
+        image.size,
         metaData,
       );
 
@@ -99,7 +100,7 @@ export class FileService {
 
   async findAll(getFileDto: GetFilesQueryDto) {
     // Destructure query parameters
-    const { sortField, sort, take, skip } = getFileDto;
+    const { sortField, sort, take, skip, page } = getFileDto;
 
     // Determine the sorting order and field
     const orderField: string = sortField || 'createdAt';
@@ -127,10 +128,7 @@ export class FileService {
     });
 
     // Generate pagination metadata
-    const pageMeta: PageMetaDto = new PageMetaDto({
-      metaData: getFileDto,
-      itemCount,
-    });
+    const pageMeta: PageMetaDto = new PageMetaDto(page, take, itemCount);
 
     return { files, pageMeta };
   }

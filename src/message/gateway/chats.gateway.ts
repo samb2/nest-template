@@ -42,7 +42,7 @@ export class ChatsGateway
   server: Server;
   onlineUsers: User[] = [];
 
-  afterInit(server: any): any {
+  afterInit(server: Server): void {
     server.use(async (socket: CustomClient, next) => {
       const token: string =
         socket.handshake.headers.authorization?.split(' ')[1];
@@ -71,7 +71,7 @@ export class ChatsGateway
     });
   }
 
-  handleConnection(client: any): any {
+  handleConnection(client: CustomClient): void {
     // Join Client to Rooms
     client.join(client.user.id);
 
@@ -80,7 +80,7 @@ export class ChatsGateway
     this.server.emit('user:list', this.onlineUsers);
   }
 
-  handleDisconnect(client: any): any {
+  handleDisconnect(client: CustomClient): void {
     if (client.user) {
       // Find the index of the user in the onlineUsers array
       const index: number = this.onlineUsers.findIndex((user) => {

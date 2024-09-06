@@ -16,7 +16,7 @@ export class PermissionService {
     getPermissionDto: GetPermissionQueryDto,
   ): Promise<GetPermissionRes> {
     // Destructure query parameters
-    const { sort, sortField, take, skip } = getPermissionDto;
+    const { sort, sortField, take, skip, page } = getPermissionDto;
 
     // Determine sorting parameters
     const orderField: string = sortField || 'id';
@@ -33,10 +33,7 @@ export class PermissionService {
       });
 
     // Create page metadata DTO
-    const pageMeta: PageMetaDto = new PageMetaDto({
-      metaData: getPermissionDto,
-      itemCount,
-    });
+    const pageMeta: PageMetaDto = new PageMetaDto(page, take, itemCount);
 
     return { permissions, pageMeta };
   }

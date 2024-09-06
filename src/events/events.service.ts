@@ -16,7 +16,7 @@ export class EventsService implements OnModuleInit, OnModuleDestroy {
     private eventEmitter: EventEmitter2,
   ) {}
 
-  onModuleInit(): any {
+  onModuleInit(): void {
     // user-registered
     this.eventEmitter.on(
       EventEnum.USER_REGISTERED,
@@ -40,7 +40,7 @@ export class EventsService implements OnModuleInit, OnModuleDestroy {
     );
   }
 
-  onModuleDestroy(): any {
+  onModuleDestroy(): void {
     // user-registered
     this.eventEmitter.off(EventEnum.USER_REGISTERED, async () => {});
 

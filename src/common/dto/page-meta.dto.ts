@@ -1,10 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-interface PageMetaDtoParameters {
-  metaData: any;
-  itemCount: number;
-}
-
 export class PageMetaDto {
   @ApiProperty()
   readonly page: number;
@@ -24,9 +19,9 @@ export class PageMetaDto {
   @ApiProperty()
   readonly hasNextPage: boolean;
 
-  constructor({ metaData, itemCount }: PageMetaDtoParameters) {
-    this.page = metaData.page;
-    this.take = metaData.take;
+  constructor(page: number, take: number, itemCount: number) {
+    this.page = page;
+    this.take = take;
     this.itemCount = itemCount;
     this.pageCount = Math.ceil(this.itemCount / this.take);
     this.hasPreviousPage = this.page > 1;

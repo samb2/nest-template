@@ -7,6 +7,7 @@ import {
 import { firstValueFrom, Observable, of } from 'rxjs';
 import { Reflector } from '@nestjs/core';
 import { ConfigService } from '@nestjs/config';
+import { ResponseObject } from '../interfaces/response-object.interface';
 
 @Injectable()
 export class ResponseInterceptor implements NestInterceptor {
@@ -43,7 +44,7 @@ export class ResponseInterceptor implements NestInterceptor {
       this.reflector.get<number>('__httpCode__', context.getHandler()) || 200;
 
     // Construct the response object with standard structure
-    const responseObj: any = {
+    const responseObj: ResponseObject = {
       success: true,
       statusCode: status,
       message: this.statusMessages[status],
