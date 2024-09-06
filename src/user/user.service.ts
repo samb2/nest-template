@@ -11,7 +11,7 @@ import {
 } from './dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from '../auth/entities';
-import { Repository } from 'typeorm';
+import { FindOptionsWhere, Repository } from 'typeorm';
 import { PageMetaDto } from '../common/dto/page-meta.dto';
 
 @Injectable()
@@ -28,11 +28,18 @@ export class UserService {
     const { is_active, admin, is_delete, sort, sortField, take, skip } =
       getUsersQueryDto;
 
+    // Convert string values to boolean where necessary
+    const isActiveBool =
+      is_active !== undefined ? is_active === 'true' : undefined;
+    const isDeleteBool =
+      is_delete !== undefined ? is_delete === 'true' : undefined;
+    const adminBool = admin !== undefined ? admin === 'true' : undefined;
+
     // Initialize whereConditions object to build the WHERE clause for filtering
-    const whereConditions: any = {
-      ...(is_delete !== undefined ? { isDelete: is_delete } : {}),
-      ...(is_active !== undefined ? { isActive: is_active } : {}),
-      ...(admin !== undefined ? { admin: admin } : {}),
+    const whereConditions: FindOptionsWhere<User> | FindOptionsWhere<User>[] = {
+      ...(isDeleteBool !== undefined ? { isDelete: isDeleteBool } : {}),
+      ...(isActiveBool !== undefined ? { isActive: isActiveBool } : {}),
+      ...(adminBool !== undefined ? { admin: adminBool } : {}),
     };
 
     // Determine the sorting order and field

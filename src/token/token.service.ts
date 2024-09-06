@@ -33,11 +33,7 @@ export class TokenService {
     return this.jwtService.signAsync(payload, { secret: secretKey, expiresIn });
   }
 
-  public verify(token: string, secret: string): any {
-    try {
-      return this.jwtService.verify(token, { secret });
-    } catch (e) {
-      return false;
-    }
+  public verify<T extends object>(token: string, secret: string): T {
+    return this.jwtService.verify<T>(token, { secret });
   }
 }

@@ -18,7 +18,6 @@ import { SocketClientEventEnum, SocketServerEventEnum } from '../enum';
 import { JwtAccessPayload } from '../../common/interfaces';
 import { MessageService } from '../message.service';
 import { ChatBodyDto } from '../dto/chat-body.dto';
-import { UseFilters, WsExceptionFilter } from '@nestjs/common';
 import { plainToClass } from 'class-transformer';
 import { validate } from 'class-validator';
 
@@ -48,21 +47,24 @@ export class ChatsGateway
       const token: string =
         socket.handshake.headers.authorization?.split(' ')[1];
       if (token) {
-        const decoded: JwtAccessPayload = this.tokenService.verify(
-          token,
-          this.configService.get('jwt.access_key'),
-        );
-        if (!decoded) {
-          return next(new Error('Token Expired!'));
+        try {
+          const decoded: JwtAccessPayload =
+            this.tokenService.verify<JwtAccessPayload>(
+              token,
+              this.configService.get('jwt.access_key'),
+            );
+
+          const user: User = await this.userService.validateUserByIdForWS(
+            decoded.id,
+          );
+          if (!user) {
+            return next(new Error('user not found!'));
+          }
+          socket.user = user;
+          next();
+        } catch (error) {
+          return next(new Error('Invalid token'));
         }
-        const user: User = await this.userService.validateUserByIdForWS(
-          decoded.id,
-        );
-        if (!user) {
-          return next(new Error('user not found!'));
-        }
-        socket.user = user;
-        next();
       } else {
         next(new Error('Empty Token!'));
       }

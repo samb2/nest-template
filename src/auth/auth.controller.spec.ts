@@ -1,6 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
+import { RequestWithUser, RequestWithUserRefresh } from '../common/interfaces';
 
 describe('AuthController', () => {
   let controller: AuthController;
@@ -62,7 +63,9 @@ describe('AuthController', () => {
 
   describe('refresh', () => {
     it('should call authService.refresh with req.user', async () => {
-      const req = { user: 'authId' };
+      const req = {
+        user: 'authId',
+      } as RequestWithUserRefresh;
       await controller.refresh(req);
       expect(service.refresh).toHaveBeenCalledWith(req.user);
     });
@@ -70,7 +73,7 @@ describe('AuthController', () => {
 
   describe('logout', () => {
     it('should call authService.logout with req.user', async () => {
-      const req = { user: 'authId' };
+      const req: RequestWithUser = { user: {} } as RequestWithUser;
       await controller.logout(req);
       expect(service.logout).toHaveBeenCalledWith(req.user);
     });

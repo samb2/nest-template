@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { Client } from 'minio';
 import { ConfigService } from '@nestjs/config';
 import { BucketEnum } from './enum/bucket.enum';
+import * as stream from 'node:stream';
 
 @Injectable()
 export class MinioService {
@@ -20,7 +21,7 @@ export class MinioService {
   async insertFile(
     bucketName: BucketEnum,
     buketKey: string,
-    file: any,
+    file: stream.Readable | Buffer | string,
     metaData: any,
   ): Promise<void> {
     try {

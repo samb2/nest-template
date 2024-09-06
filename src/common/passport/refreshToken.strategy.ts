@@ -4,6 +4,7 @@ import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { RedisService } from '../../redis';
 import { JwtRefreshPayload } from '../interfaces';
+import { Request } from 'express';
 
 @Injectable()
 export class RefreshTokenStrategy extends PassportStrategy(
@@ -23,7 +24,7 @@ export class RefreshTokenStrategy extends PassportStrategy(
     });
   }
 
-  async validate(req: any, payload: JwtRefreshPayload): Promise<string> {
+  async validate(req: Request, payload: JwtRefreshPayload): Promise<string> {
     // get refresh token
     const token = req.headers.authorization.split(' ')[1];
     const key: string = this.redisService.generateRefreshKey(payload.id);

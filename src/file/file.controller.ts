@@ -36,6 +36,7 @@ import { PermissionEnum } from '../common/enums';
 import { Permissions } from '../common/decorator/permissions.decorator';
 import { File } from './entities/file.entity';
 import { AccessTokenGuard, PermissionGuard } from '../common/guard';
+import { RequestWithUser } from '../common/interfaces';
 
 @ApiTags('files')
 @Controller('files')
@@ -62,7 +63,7 @@ export class FileController {
   @UseInterceptors(FileInterceptor('file'), ImageFilterInterceptor)
   uploadAvatar(
     @UploadedFile() file: Express.Multer.File,
-    @Req() req: any,
+    @Req() req: RequestWithUser,
   ): Promise<File> {
     return this.fileService.uploadAvatar(file, req.user);
   }

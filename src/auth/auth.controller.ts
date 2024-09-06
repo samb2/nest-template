@@ -31,6 +31,7 @@ import {
   ResetPasswordResDto,
 } from './dto';
 import { AccessTokenGuard, RefreshTokenGuard } from '../common/guard';
+import { RequestWithUser, RequestWithUserRefresh } from '../common/interfaces';
 
 @ApiTags('auth service')
 @Controller('auth')
@@ -82,7 +83,7 @@ export class AuthController {
   @ApiBearerAuth()
   @ApiOkResponseSuccess(RefreshResDto)
   @ApiUnauthorizedResponse({ description: 'Unauthorized' })
-  refresh(@Req() req: any): Promise<RefreshResDto> {
+  refresh(@Req() req: RequestWithUserRefresh): Promise<RefreshResDto> {
     return this.authService.refresh(req.user);
   }
 
@@ -91,7 +92,7 @@ export class AuthController {
   @ApiBearerAuth()
   @ApiOkResponseSuccess(RefreshResDto)
   @ApiUnauthorizedResponse({ description: 'Unauthorized' })
-  async logout(@Req() req: any): Promise<LogoutResDto> {
+  async logout(@Req() req: RequestWithUser): Promise<LogoutResDto> {
     return this.authService.logout(req.user);
   }
 }
