@@ -28,18 +28,11 @@ export class UserService {
     const { is_active, admin, is_delete, sort, sortField, take, skip, page } =
       getUsersQueryDto;
 
-    // Convert string values to boolean where necessary
-    const isActiveBool =
-      is_active !== undefined ? is_active === 'true' : undefined;
-    const isDeleteBool =
-      is_delete !== undefined ? is_delete === 'true' : undefined;
-    const adminBool = admin !== undefined ? admin === 'true' : undefined;
-
     // Initialize whereConditions object to build the WHERE clause for filtering
     const whereConditions: FindOptionsWhere<User> | FindOptionsWhere<User>[] = {
-      ...(isDeleteBool !== undefined ? { isDelete: isDeleteBool } : {}),
-      ...(isActiveBool !== undefined ? { isActive: isActiveBool } : {}),
-      ...(adminBool !== undefined ? { admin: adminBool } : {}),
+      ...(is_delete !== undefined ? { isDelete: JSON.parse(is_delete) } : {}),
+      ...(is_active !== undefined ? { isActive: JSON.parse(is_active) } : {}),
+      ...(admin !== undefined ? { admin: JSON.parse(admin) } : {}),
     };
 
     // Determine the sorting order and field

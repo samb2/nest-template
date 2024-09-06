@@ -26,7 +26,7 @@ export class RefreshTokenStrategy extends PassportStrategy(
 
   async validate(req: Request, payload: JwtRefreshPayload): Promise<string> {
     // get refresh token
-    const token = req.headers.authorization.split(' ')[1];
+    const token: string = req.headers.authorization.split(' ')[1];
     const key: string = this.redisService.generateRefreshKey(payload.id);
     const redisRefreshToken: string = await this.redisService.get(key);
     if (token !== redisRefreshToken) {

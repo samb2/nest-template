@@ -21,8 +21,6 @@ export class SeedRolesPermissionsTable1713260435734
     this.redisInstance.on('error', (e) => {
       throw new Error(`Redis connection failed: ${e}`);
     });
-    // const { useFactory } = redis;
-    // this.redisClient = useFactory();
   }
 
   public async up(queryRunner: QueryRunner): Promise<void> {
