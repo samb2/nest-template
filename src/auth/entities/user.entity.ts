@@ -61,7 +61,9 @@ export class User {
   @OneToMany(() => ResetPassword, (resetPassword) => resetPassword.user)
   resetPassword: ResetPassword[];
 
-  @OneToMany(() => UsersRoles, (usersRoles) => usersRoles.user)
+  @OneToMany(() => UsersRoles, (usersRoles) => usersRoles.user, {
+    cascade: true,
+  })
   @Exclude()
   userRoles: UsersRoles[];
 

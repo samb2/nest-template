@@ -80,7 +80,7 @@ services:
       - backend_network
 
   portainer:
-    image: portainer/portainer-ce
+    image: portainer/portainer-ce:latest
     container_name: portainer
     restart: always
     ports:

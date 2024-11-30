@@ -49,7 +49,8 @@ export class AuthService implements IAuthServiceInterface {
     private readonly dataSource: DataSource,
     @Inject(RedisService)
     private readonly redisService: RedisService,
-  ) {}
+  ) {
+  }
 
   public async register(registerDto: RegisterDto): Promise<RegisterResDto> {
     // Extract email and password from the DTO
@@ -59,16 +60,26 @@ export class AuthService implements IAuthServiceInterface {
     const queryRunner: QueryRunner = await createTransaction(this.dataSource);
 
     try {
-      // Get repositories for user, role, and usersRoles entities
+      // Get repositories for user, role entities
       const userRep: Repository<User> = queryRunner.manager.getRepository(User);
       const roleRep: Repository<Role> = queryRunner.manager.getRepository(Role);
-      const usersRolesRep: Repository<UsersRoles> =
-        queryRunner.manager.getRepository(UsersRoles);
 
       // Check if the user already exists
       const userExist: User = await userRep.findOne({ where: { email } });
       if (userExist) {
         throw new ConflictException('This user is already registered!');
+      }
+
+      // Retrieve the role for the user
+      const role: Role = await roleRep.findOne({
+        where: { name: RoleEnum.USER },
+        select: { id: true },
+      });
+
+      if (!role) {
+        throw new ForbiddenException(
+          'You can not register Contact Administrator!',
+        );
       }
 
       // Hash the password
@@ -79,20 +90,14 @@ export class AuthService implements IAuthServiceInterface {
         email,
         password: hashedPassword,
       });
-      await userRep.save(user);
-
-      // Retrieve the role for the user
-      const role: Role = await roleRep.findOne({
-        where: { name: RoleEnum.USER },
-        select: { id: true },
-      });
 
       // Create and save the usersRoles entity
-      const usersRoles: UsersRoles = usersRolesRep.create({
-        user,
-        role,
-      });
-      await usersRolesRep.save(usersRoles);
+      const usersRoles: UsersRoles = new UsersRoles();
+      usersRoles.user = user;
+      usersRoles.role = role;
+
+      user.userRoles = [usersRoles];
+      await userRep.save(user);
 
       // Commit the transaction
       await queryRunner.commitTransaction();
